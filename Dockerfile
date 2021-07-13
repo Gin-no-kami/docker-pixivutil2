@@ -18,6 +18,8 @@ RUN apk add \
     && \
     ln -sf python3 /usr/bin/python
 RUN python3 -m ensurepip
+RUN python3 -m venv python-env
+RUN source python-env/bin/activate
 RUN pip3 install --no-cache --upgrade pip setuptools
 
 # Install PixivUtil2
