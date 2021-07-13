@@ -21,9 +21,10 @@ RUN apk add \
     python3-dev \
     && \
     ln -sf python3 /usr/bin/python
-RUN python3 -m ensurepip
+# Setup pip
 RUN python3 -m venv python-env
 RUN source python-env/bin/activate
+RUN python3 -m ensurepip
 RUN pip3 install --no-cache --upgrade pip setuptools
 
 # Install PixivUtil2
@@ -36,9 +37,9 @@ RUN \
     && \
     ls -al \
     && \
-    pip install -r requirements.txt \
+    pip3 install -r requirements.txt \
     && \
-    del-pkg curl \
+    apk del curl \
     && \
     rm -rf /tmp/* /tmp/.[!.]*
 
