@@ -17,6 +17,7 @@ RUN apk add \
     python3 \
     zlib-dev \
     build-base \
+    jpeg-dev \
     && \
     ln -sf python3 /usr/bin/python
 RUN python3 -m ensurepip
