@@ -24,7 +24,7 @@ RUN pip3 install --no-cache --upgrade pip setuptools
 RUN \
     mkdir /opt/PixivUtil2 \
     && \
-    curl -# -L ${SRC_URL} | tar xJ -C /opt/PixivUtil2 \
+    curl -# -L ${SRC_URL} | tar xz -C /opt/PixivUtil2 \
     && \
     cd /opt/PixivUtil2 \
     && \
