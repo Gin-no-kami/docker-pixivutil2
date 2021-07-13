@@ -12,7 +12,7 @@ ARG SRC_URL=https://github.com/Nandaka/PixivUtil2/archive/refs/tags/${VERSION}.t
 WORKDIR /tmp
 
 # Install base dependencies.
-RUN add-pkg \
+RUN apk add \
     curl \
     python3 \
     && \
