@@ -1,5 +1,7 @@
 FROM alpine:latest
 
+ARG DOCKER_IMAGE_VERSION=v20210702
+
 # Define software versions
 ARG VERSION=v20210702
 
@@ -34,3 +36,11 @@ RUN \
 # Define mountable directories.
 VOLUME ["/config"]
 VOLUME ["/storage"]
+
+# Metadata.
+LABEL \
+      org.label-schema.name="PixivUtil2" \
+      org.label-schema.description="Docker container for PixivUtil2" \
+      org.label-schema.version="$DOCKER_IMAGE_VERSION" \
+      org.label-schema.vcs-url="https://github.com/Gin-no-kami/docker-pixivutil2/" \
+      org.label-schema.schema-version="1.0"
