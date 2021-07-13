@@ -15,6 +15,8 @@ WORKDIR /tmp
 RUN apk add \
     curl \
     python3 \
+    zlib-dev \
+    build-base \
     && \
     ln -sf python3 /usr/bin/python
 RUN python3 -m ensurepip
