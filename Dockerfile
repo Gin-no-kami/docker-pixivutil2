@@ -19,6 +19,7 @@ RUN apk add \
     build-base \
     jpeg-dev \
     python3-dev \
+    bash \
     && \
     ln -sf python3 /usr/bin/python
 # Setup pip
