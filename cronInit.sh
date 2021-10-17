@@ -1,3 +1,3 @@
 #!/bin/sh
 # start cron
-/usr/sbin/crond -f -l 8
+/usr/sbin/crond -f -L /dev/stdout
