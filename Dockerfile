@@ -46,9 +46,12 @@ RUN \
     && \
     rm -rf /tmp/* /tmp/.[!.]*
 
+ADD crontab.txt /crontab.txt
 ADD pixivAuto.sh /pixivAuto.sh
 COPY cronInit.sh /cronInit.sh
 RUN chmod 755 /pixivAuto.sh /cronInit.sh
+RUN /usr/bin/crontab /crontab.txt
+
 
 # Define mountable directories.
 VOLUME ["/config"]
