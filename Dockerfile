@@ -20,13 +20,15 @@ RUN apk add \
     jpeg-dev \
     python3-dev \
     bash \
+    nano \
     && \
     ln -sf python3 /usr/bin/python
+
 # Setup pip
 RUN python3 -m venv python-env
 RUN source python-env/bin/activate
 RUN python3 -m ensurepip
-RUN pip3 install --no-cache --upgrade pip setuptools
+RUN pip3 install --no-cache --upgrade pip setuptools==57
 
 # Install PixivUtil2
 RUN \
@@ -44,10 +46,15 @@ RUN \
     && \
     rm -rf /tmp/* /tmp/.[!.]*
 
+ADD pixivAuto.sh /pixivAuto.sh
+COPY cronInit.sh /cronInit.sh
+RUN chmod 755 /pixivAuto.sh /cronInit.sh
 
 # Define mountable directories.
 VOLUME ["/config"]
 VOLUME ["/storage"]
+
+CMD ["/cronInit.sh"]
 
 # Metadata.
 LABEL \
