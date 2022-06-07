@@ -46,6 +46,8 @@ RUN \
     && \
     rm -rf /tmp/* /tmp/.[!.]*
 
+RUN chown -R nobody:nobody /opt/PixivUtil2
+RUN chmod 777 /opt/PixivUtil2
 ADD crontab.txt /crontab.txt
 ADD pixivAuto.sh /pixivAuto.sh
 COPY cronInit.sh /cronInit.sh
