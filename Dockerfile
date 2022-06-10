@@ -28,7 +28,7 @@ RUN apk add \
 RUN python3 -m venv python-env
 RUN source python-env/bin/activate
 RUN python3 -m ensurepip
-RUN pip3 install --no-cache --upgrade pip setuptools
+RUN pip3 install --no-cache --upgrade pip setuptools 
 
 # Install PixivUtil2
 RUN \
@@ -46,14 +46,17 @@ RUN \
     && \
     rm -rf /tmp/* /tmp/.[!.]*
 
-RUN chown -R nobody:nobody /opt/PixivUtil2
-RUN chmod 777 /opt/PixivUtil2
-ADD crontab.txt /crontab.txt
+RUN adduser -D -u 99 pixivUser 100 \
+    && \
+    chown -R nobody:nobody /opt/PixivUtil2 \
+    && \
+    chmod 777 /opt/PixivUtil2 
+ADD crontab.txt /crontab.txt 
 ADD pixivAuto.sh /pixivAuto.sh
 COPY cronInit.sh /cronInit.sh
-RUN chmod 755 /pixivAuto.sh /cronInit.sh
-RUN /usr/bin/crontab /crontab.txt
-
+RUN chmod 777 /pixivAuto.sh /cronInit.sh /crontab.txt \
+    && \
+    /usr/bin/crontab -u pixivUser /crontab.txt
 
 # Define mountable directories.
 VOLUME ["/config"]
