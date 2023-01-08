@@ -1,9 +1,9 @@
 FROM alpine:latest
 
-ARG DOCKER_IMAGE_VERSION=v20220701
+ARG DOCKER_IMAGE_VERSION=v20230105
 
 # Define software versions
-ARG VERSION=v20220701
+ARG VERSION=v20230105
 
 # Define software download URLs
 ARG SRC_URL=https://github.com/Nandaka/PixivUtil2/archive/refs/tags/${VERSION}.tar.gz
