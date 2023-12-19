@@ -20,7 +20,8 @@ RUN apk add \
     jpeg-dev \
     python3-dev \
     bash \
-    nano \
+    vim \
+    ffmpeg \
     && \
     ln -sf python3 /usr/bin/python
 
@@ -28,7 +29,7 @@ RUN apk add \
 RUN python3 -m venv python-env
 RUN source python-env/bin/activate
 RUN python3 -m ensurepip
-RUN pip3 install --no-cache --upgrade pip setuptools 
+RUN pip3 install --no-cache --upgrade pip setuptools
 
 # Install PixivUtil2
 RUN \
@@ -46,12 +47,12 @@ RUN \
     && \
     rm -rf /tmp/* /tmp/.[!.]*
 
-RUN adduser -D -u 99 pixivUser 100 \
+RUN adduser -D -u 99 -G users pixivUser \
     && \
     chown -R nobody:nobody /opt/PixivUtil2 \
     && \
-    chmod 777 /opt/PixivUtil2 
-ADD crontab.txt /crontab.txt 
+    chmod 777 /opt/PixivUtil2
+ADD crontab.txt /crontab.txt
 ADD pixivAuto.sh /pixivAuto.sh
 COPY cronInit.sh /cronInit.sh
 RUN chmod 777 /pixivAuto.sh /cronInit.sh /crontab.txt \
