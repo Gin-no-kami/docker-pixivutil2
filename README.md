@@ -8,31 +8,22 @@ Create an interactive session using:
 If you already have an existing config from an existing PixivUtil2 instance, simply copy the following files:
 | Original File | After Copy |
 | :----: | --- |
-| `config.ini` | `/config/configauto.ini` |
+| `config.ini` | `/config/config.ini` |
 | `db.sqlite` | `/config/db.sqlite` |
 
 Update your config so that it is saving the files to somewhere in `/storage`.
 
-Then in an interactive session generate `member_list.txt` by running `python /opt/PixivUtil2/PixivUtil2.py -c /config/configauto.ini` then options `d`, `3`, `member_list.txt`, `n`.
+Then in an interactive session generate `member_list.txt` by running `cd /config && /opt/PixivUtil2/PixivUtil2.py -c /config/config.ini` then options `d`, `3`, `member_list.txt`, `n`.
 
 ### New PixivUtil2
-In an interactive session run `python /opt/PixivUtil2/PixivUtil2.py` from the `/config` folder and it will generate a `config.ini` for you. Then simply rename it to `configauto.ini`. Checkout [PixivUtil2 documentation](https://github.com/Nandaka/PixivUtil2) for an explination of each option.
+Running the container for the first time will create a config.ini in the `/config` folder then exit. Configure the file as needed. Checkout [PixivUtil2 documentation](https://github.com/Nandaka/PixivUtil2) for an explination of each option. You will need to follow the authentication instructions [here](https://github.com/Nandaka/PixivUtil2/tree/master?tab=readme-ov-file#a-usage) at a minimum.
 
-### Intended Workflow
-Update the following options in your config file:
-```
-rootDirectory = /storage/
-checkUpdatedLimit = 5
-```
-These options will save the images in the correct location and stop processing a given user if the first 5 images have already been archived.
-
-`member_list.txt` is the file that pixivAuto.sh uses to automatically download all new files from the artists you want. To add new artists to the list, first download their current gallery using the following bash script (to ensure umask is set properly):
-```
-#!/bin/bash
-umask 000
-python /opt/PixivUtil2/PixivUtil2.py -c /config/configauto.ini
-```
-Using option `1` to download by member_id. Then re-generate your member_list.txt by using the commands above. If you need to delete a member_id use options `d` then `9` and then re-generate your member_list.txt.
+## Configuration
+The container takes 2 environment variables for the auto run:
+| ENV Variable | Type |Default | Explanation |
+| :---: | --- | --- | --- |
+| `ARGS` | string | -s 4 -f /config/member_list.txt -x | The content of this variable with be appended<br>to the command that starts PixivUtil |
+| `CRON` | string | 0 */6 * * * | The cron entry for how often PixivUtil2 should be started, defaulted to every 6 hours.<br>Mind you that a new instance will never start if the previous run is still active.<br>So technically this can be considered<br>"How often to try starting a new instance once the previous one finished".
 
 ## Docker Parameters
 The following parameters are required:
@@ -42,6 +33,9 @@ The following parameters are required:
 | `-v /storage` | Location used for downloaded images. |
 
 In order to play nicely with Unraid's file permissions, PixivUtil2 is run as the user pixuvUser with PUID 99 and GPID 100 with a 000 mask. These are hardcoded values used in the Dockerfile when the account is created, but I would welcome a merge-request to make this user specified.
+
+## Running
+The container automatically all new images from the `member_list.txt` on a set time based on the `CRON` variable. You can get an interactive session (with the same config/options) by running '/pixivRun.sh'.
 
 ## Build and Deploy Steps:
 ```
