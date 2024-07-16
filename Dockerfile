@@ -1,9 +1,9 @@
 FROM alpine:latest
 
-ARG DOCKER_IMAGE_VERSION=v20230105
+ARG DOCKER_IMAGE_VERSION=v20240703
 
 # Define software versions
-ARG VERSION=v20230105
+ARG VERSION=v20240703
 
 # Define software download URLs
 ARG SRC_URL=https://github.com/Nandaka/PixivUtil2/archive/refs/tags/${VERSION}.tar.gz
@@ -19,6 +19,7 @@ RUN apk add \
     build-base \
     jpeg-dev \
     python3-dev \
+    py3-pip \
     bash \
     vim \
     ffmpeg \
@@ -26,10 +27,10 @@ RUN apk add \
     ln -sf python3 /usr/bin/python
 
 # Setup pip
-RUN python3 -m venv python-env
-RUN source python-env/bin/activate
-RUN python3 -m ensurepip
-RUN pip3 install --no-cache --upgrade pip setuptools
+# RUN python3 -m venv python-env
+# RUN source python-env/bin/activate
+# RUN python3 -m ensurepip
+RUN PIP_BREAK_SYSTEM_PACKAGES=1 pip3 install --no-cache --upgrade pip setuptools
 
 # Install PixivUtil2
 RUN \
@@ -39,31 +40,39 @@ RUN \
     && \
     cd /opt/PixivUtil2 \
     && \
-    ls -al \
+    # Temporary fix for login issue (https://github.com/Nandaka/PixivUtil2/issues/1352)
+    sed -i '351s+https://www.pixiv.net/en+https://www.pixiv.net/+' PixivBrowserFactory.py \
+    && cat PixivBrowserFactory.py | grep pixiv.net \
     && \
-    pip3 install -r requirements.txt \
+    sed -i '372s+https://www.pixiv.net/+https://www.pixiv.net+' PixivBrowserFactory.py\
+    && \
+    pip3 install --break-system-packages -r requirements.txt \
     && \
     apk del curl \
     && \
     rm -rf /tmp/* /tmp/.[!.]*
 
+# Setup user account
 RUN adduser -D -u 99 -G users pixivUser \
     && \
     chown -R nobody:nobody /opt/PixivUtil2 \
     && \
     chmod 777 /opt/PixivUtil2
-ADD crontab.txt /crontab.txt
-ADD pixivAuto.sh /pixivAuto.sh
+
+COPY pixivAuto.sh /pixivAuto.sh
+COPY pixivRun.sh /pixivRun.sh
 COPY cronInit.sh /cronInit.sh
-RUN chmod 777 /pixivAuto.sh /cronInit.sh /crontab.txt \
-    && \
-    /usr/bin/crontab -u pixivUser /crontab.txt
+COPY entrypoint.sh /entrypoint.sh
+COPY default_config.ini /opt/PixivUtil2/default_config.ini
+RUN chmod 700 /pixivAuto.sh /pixivRun.sh /cronInit.sh /entrypoint.sh
+RUN chown root:root /cronInit.sh /entrypoint.sh
+RUN chown pixivUser:users /pixivAuto.sh /pixivRun.sh
 
 # Define mountable directories.
 VOLUME ["/config"]
 VOLUME ["/storage"]
 
-CMD ["/cronInit.sh"]
+ENTRYPOINT [ "/entrypoint.sh" ]
 
 # Metadata.
 LABEL \
