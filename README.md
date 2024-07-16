@@ -35,7 +35,7 @@ The following parameters are required:
 In order to play nicely with Unraid's file permissions, PixivUtil2 is run as the user pixuvUser with PUID 99 and GPID 100 with a 000 mask. These are hardcoded values used in the Dockerfile when the account is created, but I would welcome a merge-request to make this user specified.
 
 ## Running
-The container automatically all new images from the `member_list.txt` on a set time based on the `CRON` variable. You can get an interactive session (with the same config/options) by running '/pixivRun.sh'.
+The container automatically all new images from the `member_list.txt` on a set time based on the `CRON` variable. You can get an interactive session (with the same config/options) by running `/pixivAuto.sh -i`.
 
 ## Build and Deploy Steps:
 ```
