@@ -40,7 +40,11 @@ RUN \
     && \
     cd /opt/PixivUtil2 \
     && \
-    ls -al \
+    # Temporary fix for login issue (https://github.com/Nandaka/PixivUtil2/issues/1352)
+    sed -i '351s+https://www.pixiv.net/en+https://www.pixiv.net/+' PixivBrowserFactory.py \
+    && cat PixivBrowserFactory.py | grep pixiv.net \
+    && \
+    sed -i '372s+https://www.pixiv.net/+https://www.pixiv.net+' PixivBrowserFactory.py\
     && \
     pip3 install --break-system-packages -r requirements.txt \
     && \
