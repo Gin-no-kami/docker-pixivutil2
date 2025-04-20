@@ -1,19 +1,13 @@
 FROM alpine:latest
 
-ARG DOCKER_IMAGE_VERSION=v20240703
-
-# Define software versions
-ARG VERSION=v20240703
-
-# Define software download URLs
-ARG SRC_URL=https://github.com/Nandaka/PixivUtil2/archive/refs/tags/${VERSION}.tar.gz
+ARG DOCKER_IMAGE_VERSION=v20250419
 
 # Define working directory.
 WORKDIR /tmp
 
 # Install base dependencies.
 RUN apk add \
-    curl \
+    git \
     python3 \
     zlib-dev \
     build-base \
@@ -36,15 +30,9 @@ RUN PIP_BREAK_SYSTEM_PACKAGES=1 pip3 install --no-cache --upgrade pip setuptools
 RUN \
     mkdir /opt/PixivUtil2 \
     && \
-    curl -# -L ${SRC_URL} | tar xz --strip 1 -C /opt/PixivUtil2 \
+    git clone https://github.com/Nandaka/PixivUtil2.git /opt/PixivUtil2 \
     && \
     cd /opt/PixivUtil2 \
-    && \
-    # Temporary fix for login issue (https://github.com/Nandaka/PixivUtil2/issues/1352)
-    sed -i '351s+https://www.pixiv.net/en+https://www.pixiv.net/+' PixivBrowserFactory.py \
-    && cat PixivBrowserFactory.py | grep pixiv.net \
-    && \
-    sed -i '372s+https://www.pixiv.net/+https://www.pixiv.net+' PixivBrowserFactory.py\
     && \
     pip3 install --break-system-packages -r requirements.txt \
     && \
