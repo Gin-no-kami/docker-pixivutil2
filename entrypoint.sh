@@ -22,7 +22,7 @@ if [ ! -f /config/config.ini ]; then
 fi
 
 if [ -z "$CRON" ]; then
-    cron="0 */6 * * *"
+    cron="0 11 * * 0"
 else
     cron="$CRON"
 fi

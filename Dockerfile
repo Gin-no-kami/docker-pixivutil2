@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-ARG DOCKER_IMAGE_VERSION=v20250424
+ARG DOCKER_IMAGE_VERSION=v20250917
 
 # Define working directory.
 WORKDIR /tmp
